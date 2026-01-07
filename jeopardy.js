@@ -1,5 +1,5 @@
-const NUM_CATEGORIES = 4;
-const NUM_QUESTIONS_PER_CAT = 4;
+const NUM_CATEGORIES = 6;
+const NUM_QUESTIONS_PER_CAT = 5;
 
 const API_BASE = "https://rithm-jeopardy.herokuapp.com/api";
 
