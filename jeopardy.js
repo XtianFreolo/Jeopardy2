@@ -23,58 +23,120 @@ function sampleSize(arr, n) {
 
 
 
-function getCategory(catId) {
+async function getCategoryIds() {
+    // Get a bunch and sample
+    const res = await $.getJSON(`${API_BASE}/categories?count=100`);
+
+    // Keep only categories that can support 5 clues
+    const valid = res.filter((c) => c.clues_count >= NUM_QUESTIONS_PER_CAT);
+
+    const picked = sampleSize(valid, NUM_CATEGORIES);
+    return picked.map((c) => c.id);
 }
 
-/** Fill the HTML table#jeopardy with the categories & cells for questions.
- *
- * - The <thead> should be filled w/a <tr>, and a <td> for each category
- * - The <tbody> should be filled w/NUM_QUESTIONS_PER_CAT <tr>s,
- *   each with a question for each category in a <td>
- *   (initally, just show a "?" where the question/answer would go.)
- */
 
+async function getCategory(catId) {
+    const res = await $.getJSON(`${API_BASE}/category?id=${catId}`);
+
+    const title = res.title;
+
+    // Filter out any weird blanks just in case
+    const validClues = res.clues.filter((clue) => clue.question && clue.answer);
+
+    const picked = sampleSize(validClues, NUM_QUESTIONS_PER_CAT).map((clue) => ({
+        question: clue.question,
+        answer: clue.answer,
+        showing: null,
+    }));
+
+    return { title, clues: picked };
+}
+
+// Fill the HTML table
 async function fillTable() {
+    const $table = $("#jeopardy");
+    $table.empty();
+
+    // Build THEAD
+    const $thead = $("<thead>");
+    const $headRow = $("<tr>");
+    for (let c = 0; c < NUM_CATEGORIES; c++) {
+        $headRow.append($("<th>").text(categories[c].title.toUpperCase()));
+    }
+    $thead.append($headRow);
+    $table.append($thead);
+
+    // Build TBODY
+    const $tbody = $("<tbody>");
+    for (let r = 0; r < NUM_QUESTIONS_PER_CAT; r++) {
+        const $row = $("<tr>");
+        for (let c = 0; c < NUM_CATEGORIES; c++) {
+            const $cell = $("<td>")
+                .text("?")
+                .attr("data-cat", c)
+                .attr("data-clue", r);
+            $row.append($cell);
+        }
+        $tbody.append($row);
+    }
+    $table.append($tbody);
 }
 
-/** Handle clicking on a clue: show the question or answer.
- *
- * Uses .showing property on clue to determine what to show:
- * - if currently null, show question & set .showing to "question"
- * - if currently "question", show answer & set .showing to "answer"
- * - if currently "answer", ignore click
- * */
-
+// Clicking on a clue handle
 function handleClick(evt) {
+    const $cell = $(evt.target);
+    if (!$cell.is("td")) return;
+
+    const catIdx = Number($cell.attr("data-cat"));
+    const clueIdx = Number($cell.attr("data-clue"));
+
+    const clue = categories[catIdx].clues[clueIdx];
+
+    if (clue.showing === null) {
+        clue.showing = "question";
+        $cell.text(clue.question);
+    } else if (clue.showing === "question") {
+        clue.showing = "answer";
+        $cell.text(clue.answer);
+    } // if "answer", do nothing
 }
 
-/** Wipe the current Jeopardy board, show the loading spinner,
- * and update the button used to fetch data.
- */
-
+// Show the loading spinner
 function showLoadingView() {
-
+    $("#jeopardy").empty();
+    $("#spinner").show();
+    $("#restart").prop("disabled", true).text("Loading...");
 }
 
-/** Remove the loading spinner and update the button used to fetch data. */
-
+// Hide the loading spinner
 function hideLoadingView() {
+    $("#spinner").hide();
+    $("#restart").prop("disabled", false).text("Restart");
 }
 
-/** Start game:
- *
- * - get random category Ids
- * - get data for each category
- * - create HTML table
- * */
-
+// Start up game
 async function setupAndStart() {
+    showLoadingView();
+
+    try {
+        const ids = await getCategoryIds();
+        const catPromises = ids.map((id) => getCategory(id));
+        categories = await Promise.all(catPromises);
+
+        await fillTable();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load game data. Please try again.");
+    } finally {
+        hideLoadingView();
+    }
 }
 
-/** On click of start / restart button, set up game. */
+// restart button
+$("#restart").on("click", setupAndStart);
 
-// TODO
+// Clue click
+$("#jeopardy").on("click", "td", handleClick);
 
-/** On page load, add event handler for clicking clues */
-
-// TODO
+// Auto-start on load
+$(setupAndStart);
