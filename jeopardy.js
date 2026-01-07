@@ -1,32 +1,17 @@
-// categories is the main data structure for the app; it looks like this:
+const NUM_CATEGORIES = 4;
+const NUM_QUESTIONS_PER_CAT = 4;
 
-//  [
-//    { title: "Math",
-//      clues: [
-//        {question: "2+2", answer: 4, showing: null},
-//        {question: "1+1", answer: 2, showing: null}
-//        ...
-//      ],
-//    },
-//    { title: "Literature",
-//      clues: [
-//        {question: "Hamlet Author", answer: "Shakespeare", showing: null},
-//        {question: "Bell Jar Author", answer: "Plath", showing: null},
-//        ...
-//      ],
-//    },
-//    ...
-//  ]
+const API_BASE = "https://rithm-jeopardy.herokuapp.com/api";
 
 let categories = [];
 
 
-/** Get NUM_CATEGORIES random category from API.
- *
- * Returns array of category ids
- */
-
-function getCategoryIds() {
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
 
 /** Return object with data about a category:
