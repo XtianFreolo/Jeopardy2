@@ -1,0 +1,104 @@
+/* some colors you may find useful:
+  #115ff4
+  #060ce9
+  #28a200
+  #8d2ab5
+  #74119c
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0b0f2a;
+    color: white;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+}
+
+.title {
+    text-align: center;
+    letter-spacing: 2px;
+    margin: 0 0 16px;
+    font-size: 42px;
+    color: #ffffff;
+}
+
+#jeopardy {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: #060ce9;
+    border: 6px solid #115ff4;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#jeopardy th,
+#jeopardy td {
+    border: 2px solid #115ff4;
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    word-wrap: break-word;
+}
+
+#jeopardy th {
+    background: #060ce9;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    height: 70px;
+}
+
+#jeopardy td {
+    background: #115ff4;
+    color: white;
+    font-size: 16px;
+    height: 110px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#jeopardy td:hover {
+    filter: brightness(1.08);
+}
+
+/* Spinner */
+.spinner {
+    display: none;
+    margin: 12px auto 18px;
+    width: fit-content;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* Restart button */
+.restart-btn {
+    display: block;
+    margin: 18px auto 0;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    background: #28a200;
+    color: white;
+    cursor: pointer;
+}
+
+.restart-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

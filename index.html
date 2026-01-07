@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jeopardy</title>
+    <link rel="stylesheet" href="jeopardy.css" />
+</head>
+
+<body>
+    <main class="container">
+        <h1 class="title">JEOPARDY!</h1>
+
+
+        <div id="spinner" class="spinner" aria-live="polite" aria-busy="true">
+            Loading...
+        </div>
+
+        <!-- Game board -->
+        <table id="jeopardy" aria-label="Jeopardy game board"></table>
+
+        <!-- Restart button -->
+        <button id="restart" class="restart-btn" type="button">Restart</button>
+    </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="jeopardy.js"></script>
+</body>
+
+</html>
