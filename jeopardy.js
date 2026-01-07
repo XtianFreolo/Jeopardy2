@@ -5,7 +5,7 @@ const API_BASE = "https://rithm-jeopardy.herokuapp.com/api";
 
 let categories = [];
 
-
+// Return array of category ids
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -14,17 +14,14 @@ function shuffle(arr) {
     return arr;
 }
 
-/** Return object with data about a category:
- *
- *  Returns { title: "Math", clues: clue-array }
- *
- * Where clue-array is:
- *   [
- *      {question: "Hamlet Author", answer: "Shakespeare", showing: null},
- *      {question: "Bell Jar Author", answer: "Plath", showing: null},
- *      ...
- *   ]
- */
+// Return a random sample of n items from the array
+function sampleSize(arr, n) {
+    const copy = [...arr];
+    shuffle(copy);
+    return copy.slice(0, n);
+}
+
+
 
 function getCategory(catId) {
 }
